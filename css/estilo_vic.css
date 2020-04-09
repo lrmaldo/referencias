@@ -1,0 +1,29 @@
+@charset "utf-8";
+/* CSS Document */
+
+body {
+    background: url('../images/fondoportalcliente.jpg') no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    background-size: cover;
+    -o-background-size: cover;
+}
+
+.col-lg-5 {
+    -moz-box-flex: 0;
+    flex: 0 0 90.6667%;
+    max-width: 90.6667%;
+}
+
+#resultsDiv {
+	max-width: 88% !important;
+	margin:0px 0px 20px 0px;
+	padding-top:15px;
+
+	}
+	
+.g-py-40 {
+    background:url(../images/transBG.png) repeat;
+	box-shadow: 3px 3px 3px #777;
+    margin-top: 15px;}
+	
