@@ -1,196 +1,209 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <title>Nidix Networks - Referencia Oxxo</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="css/font-awesome.min.css?v=3">
+  <link href="css/styles.css" media="all" rel="stylesheet" type="text/css" />
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,700" rel="stylesheet">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+  
+</head>
+<body>
+<br><br><br>
+
+
 <?php
 
 
 
-function getInformacionCliente($apiData, $idCliente)
-{
-	$urlapi   = 'http://192.168.4.249/admin/api.php';
-	$postfields = [
-		'userapi'     => $apiData['userapi'],
-		'passwordapi' => $apiData['passwordapi'],
-		'comando'     => 'RevisarCliente',
-		'idcliente'   => $idCliente
-	];
+
+if(!empty($_POST["idCliente"])){
+	$id_cliente = $_POST["idCliente"];
+	////quita ceros -------------------
+
+//busca los dos primeros ceros
+$posicion_coincidencia = strpos($id_cliente, '00');
+
+$id_cliente_formateado =''; ///esta variable se usa para guardar el idcliente dependiendo de la condicion
+///se puede hacer la comparacion con 'false' o 'true' y los comparadores '===' o '!=='
+if ($posicion_coincidencia === false) {
+    //si al inicio no hay ceros devuelve false
+    $id_cliente_formateado = $id_cliente; // se guarda el id en esta variable  sino cumple la condicion
+    } else {
+            //si hay devolvera la posicion de esos 0 
+            
+            // se quita los dos ceros  y se pasa a una variable  nueva para hacer la consulta al API
+
+            $id_cliente_formateado = substr($id_cliente, 2);
+             
+            }
+
+
+	///---------------------
+	
 	$ch = curl_init();
-	curl_setopt($ch, CURLOPT_URL,$urlapi);
-	curl_setopt($ch, CURLOPT_POST, 1);
-	curl_setopt($ch, CURLOPT_TIMEOUT, 30);
-	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-	curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($postfields));
-	$curlResponse = curl_exec($ch);
-	if (curl_error($ch)) {
-	    die('No puede conectarse:a ' . curl_errno($ch) . ' - ' . curl_error($ch));
-	}
+	curl_setopt($ch, CURLOPT_URL, "http://clientes.nidix.mx/api/v1/GetClientsDetails");
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+	curl_setopt($ch, CURLOPT_HEADER, FALSE);
+	curl_setopt($ch, CURLOPT_POST, TRUE);
+	curl_setopt($ch, CURLOPT_POSTFIELDS, "{
+	  \"token\": \"QUE4L2hHOG1POTUvWURET2FTYXRHZz09\",
+	  \"idcliente\": ".$id_cliente_formateado.",
+	  \"cedula\": \"0\"
+	}");
+
+	curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+	  "Content-Type: application/json"
+	));
+
+	$response = curl_exec($ch);
 	curl_close($ch);
-	return json_decode($curlResponse, true);
-}
-
-function getData($apiData, $idCliente)
-{
-	$urlapi = 'http://192.168.4.249/admin/api.php';
-	$postfields = [
-		'userapi'     => $apiData['userapi'],
-		'passwordapi' => $apiData['passwordapi'],
-		'comando'     => 'RevisarFactura',
-		'nfactura'    => '', //--> ID de Factura (Dejar vacío si vamos a buscar por Id cliente).
-		'idcliente'   => $_POST['id'] //--> ID del clientes si deseamos mostrar su última Factura (Ejm: 000001)
-	];
-	//-->LLamar a la API
-	$ch = curl_init();
-	curl_setopt($ch, CURLOPT_URL,$urlapi);
-	curl_setopt($ch, CURLOPT_POST, 1);
-	curl_setopt($ch, CURLOPT_TIMEOUT, 30);
-	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-	curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($postfields));
-	$curlResponse = curl_exec($ch);
-	if (curl_error($ch)) {
-	    die('No puede conectarse:a ' . curl_errno($ch) . ' - ' . curl_error($ch));
-	}
-	curl_close($ch);
-	return json_decode($curlResponse, true);
-}
-
-function generaContenido($informacionCliente, $data)
-{
-	if (!empty($data['items'])) {
-		$items .= '<ul>';
-		foreach ($data['items'] as $item) {
-			$items .= "<li>{$item['descripcion']} <span>{$item['monto']}</span></li>";
-		}
-		$items .= '</ul>';
+	$jsonData = json_decode($response, true);
+	//echo $response;
+	//Datos a Pantalla
+	$estado = $jsonData["estado"]; // [estado] => exito
+	//echo $estado;
+	if($estado=='error' || $estado=='RETIRADO'){
+		echo '<section class="container ">
+			<div class="row justify-content-center">
+				<div class="col-lg-12" id="resultsDiv">
+				<font class="mb-4 align-self-center" size=30 color=brown>No se encuentra el número de cliente.</font>
+					</div>
+					</div>
+				  </section>';
+		echo '<meta http-equiv="refresh" content="2;url=index.php">';
+	}else
+	{
 		
-		$codigoBarras = "<img src='barcode.php?text={$data['referencia_oxxopay']}&size=50&orientation=horizontal&print=true'>";
-	$items   = '';
-	$content = '';
-	}
-	$response['status'] = 'success';
-	
-	$content .= '<table class="table table-striped table-responsive"><tbody>';
-	$content .= '<tr>';
-	$content .= "<td><b>Nombre:</b></td><td><h2>{$informacionCliente['nombre']}</h2></td>";
-	$content .= '</tr><tr>';
-	$content .= "<td><b>Referencia OXXO:</b></td><td>{$codigoBarras}</td>";
-	$content .= '</tr>';
-	$content .= '</tbody></table>';
-	
-
-	
-	
-	$content .= '<table class="table table-striped"><tbody>';
-	//$content .= '<tr>
-    //		<td colspan=2 class="text-right">
-    // 			<button class="btn btn-sm btn-info"><i class="fa fa-print"></i> Imprimir</button>
-    // 		</td>
-	//		</tr>';
-	$content .= '<tr>';
-	$content .= "<td><b>Id:</b></td><td>{$informacionCliente['id']}</td>";
-	$content .= '</tr><tr>';
-	$content .= "<td><b>Email:</b></td><td>{$informacionCliente['correo']}</td>";
-	$content .= '</tr><tr>';
-	$content .= "<td><b>No. Factura</b></td><td><h3>{$data['nfactura']}</h3></td>";
-	$content .= '</tr>';
-	$content .= '</tbody></table>';
-
-	$content .= '<table class="table table-striped table-responsive"><thead>';
-	$content .= '<tr>';
-		
-	$content .= '<th>Fecha de Emisión</th>';
-	$content .= '<th>Fecha Vencimiento</th>';
-	$content .= '<th>Fecha de Pago</th>';
-	
-	$content .= '<th>Referencia</th>';
-	$content .= '<th>Total</th>';
-	$content .= '<th>Estado</th>';
-	$content .= '</tr>';
-	$content .= '</thead><tbody>';
-	$content .= '<tr>';
-	$content .= "<td>{$data['emitido']}</td>";
-	$content .= "<td>{$data['vencimiento']}</td>";
-	$content .= "<td>{$data['fechapagado']}</td>";
-	$content .= "<td><b>{$data['referencia_oxxopay']}</b></td>";
-	$content .= "<td>{$data['montocobrado']}</td>";
-	$content .= "<td>{$data['estado']}</td>";
-	$content .= '</tr>';
-	$content .= '</tbody><table>';
-	$content = "
-		<div class='row'>
-			<div class='col-lg-2 col-md-1'></div>
-			<div class='col-lg-8 col-md-10 col-sm-12 col-xs-12 ticket_oxxo_container'>
-				<div class='row'>
-					<div class='col-lg-2 col-md-1'></div>
-					<div class='col-lg-8 col-md-10 col-sm-12 col-xs-12 text-center ticket_oxxo_topbar'>
-							FICHA DIGITAL. NO ES NECESARIO IMPRIMIR
+		$cli_id =  $jsonData["datos"][0]["id"];
+		$cli_nombre =  $jsonData["datos"][0]["nombre"];
+		$cli_estado =  $jsonData["datos"][0]["estado"];
+		if($cli_estado=='RETIRADO'){
+			echo '<section class="container ">
+			<div class="row justify-content-center">
+				<div class="col-lg-12" id="resultsDiv">
+				<font class="mb-4 align-self-center" size=30 color=brown>No se encuentra el número de cliente.</font>
 					</div>
-				</div>
-				<div class='row'>
-					<div class='col-lg-2 col-md-1'></div>
-					<div class='row col-lg-8 col-md-10 col-sm-12 col-xs-12'>
-						<div class='col-lg-4 col-md-4 col-sm-4 col-xs-12 ticket_oxxo_logo'>
-							<img src='images/logo-oxxo.png' class='img-responsive'>
-						</div>
-						<div class='col-lg-8 col-md-8 col-sm-8 col-xs-12 ticket_oxxo_topinfo'>
-							<div class='monto-a-pagar-texto'>MONTO A PAGAR</div>
-							<div class='monto-a-pagar-cantidad'>$ {$data['montocobrado']} <span class='moneda'>MXN</span></div>
-							<div class='monto-a-pagar-leyenda'>OXXO cobrará una comisión adicional al momento de realizar el pago.</div>
-						</div>
 					</div>
-				</div>
-				<div class='row'>
-					<div class='col-lg-2 col-md-1'></div>
-					<div class='col-lg-8 col-md-10 col-sm-12 col-xs-12 ticket_oxxo_data'>
-						<p><b>Nombre:</b> {$informacionCliente['nombre']}</p>
-						<p><b>Vencimiento:</b> {$data['vencimiento']}</p>
-					</div>
-				</div>
-				<div class='row'>
-					<div class='col-lg-2 col-md-1'></div>
-					<div class='row col-lg-8 col-md-10 col-sm-12 col-xs-12'>
-						<div class='monto-a-pagar-texto'>REFERENCIA</div>
-					</div>
-				</div>
-				<div class='row'>
-					<div class='col-lg-2 col-md-1'></div>
-					<div class='row col-lg-8 col-md-10 col-sm-12 col-xs-12'>
-						<div class='ticket_oxxo_referencia'>{$data['referencia_oxxopay']}</div>
-					</div>
-				</div>
-				<div class='row ticket_oxxo_instrucciones'>
-					<span>INSTRUCCIONES</span>
-					<ol>
-						<li>Acude a la tienda OXXO más cercana.</li>
-						<li>Indica en caja que quieres realizar un pago de <b>OXXOPay</b>.</li>
-						<li>Dicta al cajero en número de referencia en esta ficha para que tecleé directamente en la pantalla de venta.</li>
-						<li>Realiza el pago correspondiente con dinero en efectivo.</li>
-						<li>Al confirmar tu pago, el cajero te entregará un comprobante impreso. <b>En el podrás verificar que se haya realizado correctamente</b>.  conserva este comprobante de pago.</li>
-					</ol>
-					<div class='aviso'>Al completar estos pasos recibirás un correo confirmando tu pago.<div>
-				</div>
-			</div>
-		</div>
-	";
-	return $content;
-}
+				  </section>';
+					echo '<meta http-equiv="refresh" content="2;url=index.php">';
+				}else
+				{
 
-if (!empty($_POST['id'])) {
-	$response = ['status' => 'error', 'content' => ''];
-	$apiData  = [
-		'userapi'     => 'API',
-		'passwordapi' => md5('Duly.2213'),
-	]; 
-	
-	$informacionCliente = getInformacionCliente($apiData, $_POST['id']);
-	$data               = getData($apiData, $_POST['id']);
+				$ch = curl_init();
+				curl_setopt($ch, CURLOPT_URL, "http://clientes.nidix.mx/api/v1/GetInvoices");
+				curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+				curl_setopt($ch, CURLOPT_HEADER, FALSE);
 
-	if (!empty($informacionCliente) && !empty($data)) {
-		$response['status']  = 'success';
-		$response['content'] = generaContenido($informacionCliente, $data);
-	}
-	echo json_encode($response);
-}
+				curl_setopt($ch, CURLOPT_POST, TRUE);
 
-if (!empty($_POST['print']) && !empty($_POST['id']))
-{
-	$html2pdf = new Html2Pdf('P', 'A4');
-	$html2pdf->writeHtml($content);
-	$html2pdf->output('reporte.pdf');
-}
+				curl_setopt($ch, CURLOPT_POSTFIELDS, "{
+				  \"token\": \"QUE4L2hHOG1POTUvWURET2FTYXRHZz09\",
+				  \"limit\": 25,
+				  \"estado\": 1,
+				  \"idcliente\": ".$id_cliente_formateado."
+				 }");
+
+				curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+				  "Content-Type: application/json"
+				));
+
+				$response = curl_exec($ch);
+				curl_close($ch);
+				//echo $response;
+				$jsonData = json_decode($response, true);
+				//echo $response;
+				//Datos a Pantalla
+				$estado = $jsonData["estado"]; // [estado] => exito
+				
+				if($estado=='error'){
+
+					echo '<section class="container ">
+					<div class="row justify-content-center">
+						<div class="col-lg-12" id="resultsDiv">
+						<font class="mb-4 align-self-center" size=30 color=brown>No existe ninguna factura próximo a vencer.</font>
+							</div>
+							</div>
+			 			 </section>';
+				
+				echo '<meta http-equiv="refresh" content="3;url=index.php">';
+				}else
+					{
+				
+				//$jsonData = json_decode($response, true);
+				$oxxo = $jsonData["facturas"][0]["oxxo_referencia"];
+				$total = $jsonData["facturas"][0]["total"];
+				$vence = $jsonData["facturas"][0]["vencimiento"];
+
+			
+				 
+				  $value = $oxxo;
+				  $value = substr($value, 0);
+				  $oxxo = ' ' . join(' ', str_split($value, 4));  
+				
+				  $codigoBarras = "<img class='image-center' src='barcode.php?text={$oxxo}&size=50&orientation=horizontal&print=true'>";
+				echo '<div class="container">
+				<div class="row">
+				  <div class="col-sm">
+				  </div>
+				  <div class="col-sm">
+				  </div>
+				  <div class="col-sm">
+				  <form action="mpdf.php" method="POST">
+				  <input type="hidden" id="idCliente" name="idCliente" value="'.$id_cliente_formateado.'">
+				  <button class="btn btn-primary"  type="submit" ><i class="fa fa-file-pdf-o" aria-hidden="true"></i> Guardar</button>
+				  </form>
+				  </div>
+				</div>
+			  </div>';
+				  $print = '<div class="opps">
+				 
+				  <div class="opps-header">
+					  <div class="opps-reminder">Ficha digital. No es necesario imprimir.</div>
+					  <div class="opps-info">
+						  <div class="opps-brand"><img src="images/oxxopay_brand.png" alt="OXXOPay"></div>
+						  <div class="opps-ammount">
+							  <h4>Monto a pagar</h4>
+							  <h2>$'.$total.'<sup>MXN</sup></h2>
+							  <font size=2 color="black"><b>Estado: '. $cli_estado .'</b></font><br>
+							  <font size=2 color="black"><b>Vence: '.$vence.'</b></font><br>
+							 
+							  <font size=2>No.Cuenta:</font>  <font size=2 color="blue"><b>'.$cli_id .'</b></font></p></font>
+							  <p>OXXO cobrará una comisión adicional al momento de realizar el pago.</p>
+						  </div>
+					  </div>
+					  <div class="opps-reference">
+						  <h3>Referencia</h3>
+						  <h1>'.$oxxo.'</h1>
+					  </div>
+					  
+				  </div>
+				  <div >'.$codigoBarras.'</div>
+				  <div class="opps-instructions">
+					  <h3>Instrucciones</h3>
+					  <ol>
+						  <li>Acude a la tienda OXXO más cercana. <a href="https://www.google.com.mx/maps/search/oxxo/" target="_blank">Encuéntrala aquí</a>.</li>
+						  <li>Indica en caja que quieres realizar un pago de <strong>OXXOPay</strong>.</li>
+						  <li>Dicta al cajero el número de referencia en esta ficha para que tecleé directamete en la pantalla de venta.</li>
+						  <li>Realiza el pago correspondiente con dinero en efectivo.</li>
+						  <li>Al confirmar tu pago, el cajero te entregará un comprobante impreso. <strong>En el podrás verificar que se haya realizado correctamente.</strong> Conserva este comprobante de pago.</li>
+					  </ol>
+					  <div class="opps-footnote">Al completar estos pasos recibirás un correo de <strong>Nidix Networks</strong> confirmando tu pago.</div>
+				  </div>
+			  </div>	';
+
+					echo $print;
+					
+
+			
+					}	
+		}		
+	}			
+}  
+
+

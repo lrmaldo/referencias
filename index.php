@@ -8,57 +8,80 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-
-    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Open+Sans%3A400%2C300%2C500%2C600%2C700">
-
-    <link rel="stylesheet" href="css/bootstrap.min.css?v=3">
-    <link rel="stylesheet" href="css/unify.css?v=3">
-    <link rel="stylesheet" href="css/font-awesome.min.css?v=3">
-    <link rel="stylesheet" href="css/estilo_vic.css">
+<!--===============================================================================================-->	
+<link rel="icon" type="image/png" href="images/icons/favicon.ico"/>
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="vendor/bootstrap/css/bootstrap.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="fonts/font-awesome-4.7.0/css/font-awesome.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="fonts/Linearicons-Free-v1.0.0/icon-font.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="vendor/animate/animate.css">
+<!--===============================================================================================-->	
+	<link rel="stylesheet" type="text/css" href="vendor/css-hamburgers/hamburgers.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="vendor/animsition/css/animsition.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="vendor/select2/select2.min.css">
+<!--===============================================================================================-->	
+	<link rel="stylesheet" type="text/css" href="vendor/daterangepicker/daterangepicker.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="css/util.css">
+	<link rel="stylesheet" type="text/css" href="css/main.css">
+<!--===============================================================================================-->
   </head>
 
   <body>
-    <main>
-      <!-- Login -->
-      <section class="container">
-        <div class="row justify-content-center">
-          <div class="col-sm-8 col-lg-5">
-            <div class="g-brd-around g-brd-gray-light-v4 rounded g-py-40 g-px-30">
-              <header class="text-center mb-4"><img src="images/logo_vic.png">
-              </header>
-              <!-- Form -->
-              
-                <div class="mb-4">
-                  <label class="g-color-gray-dark-v2 g-font-weight-600 g-font-size-13">Num. de Cliente:</label>
-                  <input class="form-control" type="text" placeholder="Num. de cliente" id="idCliente" onkeypress="javascript:performSearch(event)">
-                </div>
-                <div class="col-12 align-self-center">
-                  <button class="btn btn-md u-btn-primary rounded g-py-13 g-px-25" id="btnSearch" type="button" onclick="javascript:performRequest()"><i class="fa fa-sign-in fa-lg"></i> Consultar</button>
-                </div>
-              
-              <!-- End Form -->
+   
+	<div class="limiter">
+		<div class="container-login100">
+			<div class="wrap-login100 p-b-160 p-t-50">
+				<form   action="ajaxRequest.php" method="POST" class="login100-form validate-form">
+					<span class="login100-form-title p-b-43">
+					<img src="images/logo_vic.png">
+					</span>
+					
+					<div class="wrap-input100 rs1 validate-input" data-validate = "Se requiere el id del Cliente" >
+						<input class="form-control input100" type="text" name="idCliente">
+						<span class="label-input100">Número de Cliente</span>
+					</div>
 
-            </div>
-          </div>
-        </div>
-		</section>
-		<hr>
-		<section class="container ">
-			<div class="row justify-content-center">
-				<div class="col-lg-12" id="resultsDiv">
-		            
-				</div>
+					<div class="container-login100-form-btn">
+						<button class="login100-form-btn">
+							Consultar
+						</button>
+					</div>
+					
+				
+				</form>
 			</div>
-      </section>
+		</div>
+	</div>
+	
+	
 
-      
-    </main>
-
-    <!-- JS Global Compulsory -->
-    
-    <script src="js/tether.min.js"></script>
-    <script src="js/jquery.min.js"></script>
-    <script src="js/mainFunctions.js"></script>
-    <script src="js/bootstrap.min.js"></script>
+	
+	
+<!--===============================================================================================-->
+	<script src="vendor/jquery/jquery-3.2.1.min.js"></script>
+<!--===============================================================================================-->
+	<script src="vendor/animsition/js/animsition.min.js"></script>
+<!--===============================================================================================-->
+	<script src="vendor/bootstrap/js/popper.js"></script>
+	<script src="vendor/bootstrap/js/bootstrap.min.js"></script>
+<!--===============================================================================================-->
+	<script src="vendor/select2/select2.min.js"></script>
+<!--===============================================================================================-->
+	<script src="vendor/daterangepicker/moment.min.js"></script>
+	<script src="vendor/daterangepicker/daterangepicker.js"></script>
+<!--===============================================================================================-->
+	<script src="vendor/countdowntime/countdowntime.js"></script>
+<!--===============================================================================================-->
+	<script src="js/main.js"></script>
   </body>
 </html>
+
+
+
+
