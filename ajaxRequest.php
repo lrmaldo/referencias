@@ -34,7 +34,7 @@ if(!empty($_POST["idCliente"])){
 
 	
 	$ch = curl_init();
-	curl_setopt($ch, CURLOPT_URL, "http://clientes.nidix.mx/api/v1/GetClientsDetails");
+	curl_setopt($ch, CURLOPT_URL, "http://localhost/api/v1/GetClientsDetails");
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
 	curl_setopt($ch, CURLOPT_HEADER, FALSE);
 	curl_setopt($ch, CURLOPT_POST, TRUE);
@@ -83,7 +83,7 @@ if(!empty($_POST["idCliente"])){
 				{
 
 				$ch = curl_init();
-				curl_setopt($ch, CURLOPT_URL, "http://clientes.nidix.mx/api/v1/GetInvoices");
+				curl_setopt($ch, CURLOPT_URL, "http://localhost/api/v1/GetInvoices");
 				curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
 				curl_setopt($ch, CURLOPT_HEADER, FALSE);
 
