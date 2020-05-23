@@ -163,11 +163,11 @@ iframe {
   align-items: center;
   padding: 15px;
 
-  background: #2575fc;
-  background: -webkit-linear-gradient(left, #6a11cb, #2575fc);
-  background: -o-linear-gradient(left, #6a11cb, #2575fc);
-  background: -moz-linear-gradient(left, #6a11cb, #2575fc);
-  background: linear-gradient(left, #6a11cb, #2575fc);
+  background: #e64819;
+  background: -webkit-linear-gradient(left, #e64819, #f2a77d);
+  background: -o-linear-gradient(left, #e64819, #f2a77d);
+  background: -moz-linear-gradient(left, #e64819, #f2a77d);
+  background: linear-gradient(left, #e64819, #f2a77d);
 
 }
 
@@ -347,11 +347,11 @@ input.input100 {
   height: 100%;
   opacity: 0;
 
-  background: #2575fc;
-  background: -webkit-linear-gradient(right, #6a11cb, #2575fc);
-  background: -o-linear-gradient(right, #6a11cb, #2575fc);
-  background: -moz-linear-gradient(right, #6a11cb, #2575fc);
-  background: linear-gradient(right, #6a11cb, #2575fc);
+  background: #e64819;
+  background: -webkit-linear-gradient(left, #e64819, #f2a77d);
+  background: -o-linear-gradient(left, #e64819, #f2a77d);
+  background: -moz-linear-gradient(left, #e64819, #f2a77d);
+  background: linear-gradient(left, #e64819, #f2a77d);
 
   -webkit-transition: all 0.4s;
   -o-transition: all 0.4s;

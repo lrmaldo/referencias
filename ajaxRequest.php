@@ -23,28 +23,15 @@
 
 
 if(!empty($_POST["idCliente"])){
-	$id_cliente = $_POST["idCliente"];
+	
+	
+	$id = $_POST["idCliente"];
 	////quita ceros -------------------
-
-//busca los dos primeros ceros
-$posicion_coincidencia = strpos($id_cliente, '00');
-
-$id_cliente_formateado =''; ///esta variable se usa para guardar el idcliente dependiendo de la condicion
-///se puede hacer la comparacion con 'false' o 'true' y los comparadores '===' o '!=='
-if ($posicion_coincidencia === false) {
-    //si al inicio no hay ceros devuelve false
-    $id_cliente_formateado = $id_cliente; // se guarda el id en esta variable  sino cumple la condicion
-    } else {
-            //si hay devolvera la posicion de esos 0 
-            
-            // se quita los dos ceros  y se pasa a una variable  nueva para hacer la consulta al API
-
-            $id_cliente_formateado = substr($id_cliente, 2);
-             
-            }
+	 $id_cliente =(int) $id;
+	//////////////////////
 
 
-	///---------------------
+
 	
 	$ch = curl_init();
 	curl_setopt($ch, CURLOPT_URL, "http://clientes.nidix.mx/api/v1/GetClientsDetails");

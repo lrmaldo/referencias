@@ -35,7 +35,7 @@
   <body>
    
 	<div class="limiter">
-		<div class="container-login100">
+		
 			<div class="wrap-login100 p-b-160 p-t-50">
 				<form   action="ajaxRequest.php" method="POST" class="login100-form validate-form">
 					<span class="login100-form-title p-b-43">
@@ -43,7 +43,7 @@
 					</span>
 					
 					<div class="wrap-input100 rs1 validate-input" data-validate = "Se requiere el id del Cliente" >
-						<input class="form-control input100" type="text" name="idCliente">
+						<input class="form-control input100"  name="idCliente" type="number" pattern="\d*"/ min="1">
 						<span class="label-input100">Número de Cliente</span>
 					</div>
 
@@ -56,7 +56,7 @@
 				
 				</form>
 			</div>
-		</div>
+		
 	</div>
 	
 	
